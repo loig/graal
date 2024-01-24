@@ -1,0 +1,270 @@
+\section{Graphe des chemins}
+
+\frame{
+    \frametitle{Chemins}
+
+    \definition[chemin]{%
+        Soit $\graphedef{}$ un graphe.
+        Un chemin (de $\sommet{}_0$ à $\sommet{}_n$) de $\graphe{}$ est une suite $\sommet{}_0\sommet{}_1 \dots \sommet{}_n$ de sommets telle que $\forall i\in[0,n[, (\sommet{}_i, \sommet{}_{i+1})\in \arcs{}$.
+    }
+
+    \notation[chemin]{%
+        S'il en existe, on peut noter $\sommet{} \cheminvers \sommetb{}$ un chemin quelconque de $\sommet{}$ à $\sommetb{}$ dans un graphe $\graphe{}$.
+    }
+
+    \definition[longueur d'un chemin]{%
+        Soit $\chemin{} = \sommet{}_0\sommet{}_1\dots\sommet{}_n$ un chemin du graphe $\graphe$.
+        La longueur de $\chemin{}$ est le nombre d'arrêtes de $\chemin{}$~:
+        $$\taille{\chemin{}} = \taille{\{(\sommet{}_0,\sommet{}_1), (\sommet{}_1,\sommet{}_2), \dots, (\sommet{}_{n-1},\sommet{}_n)\}} = n.$$
+    }
+}
+
+\frame{
+    \frametitle{Graphe des chemins}
+
+    \definition[graphe des chemins]{%
+        Soit $\graphedef{}$ un graphe, le graphe $\graphechemdef$ tel que~:
+        \begin{eqnarray*}
+            \sommetschem & = & \sommets \\
+            \arcschem & = & \{(\sommet{}, \sommetb{})~|~\exists \textrm{ chemin de } \sommet{} \textrm{ à } \sommetb{} \textrm{ dans } \graphe{}\}
+        \end{eqnarray*}
+        s'appelle le graphe des chemins de $\graphe{}$.
+    }
+
+    \pause
+
+    \exercice{%
+        Donner le graphe des chemins du graphe suivant~:
+        \begin{center}
+            \scalebox{0.6}{
+            \begin{tikzpicture}
+                \node (a) at (0,0) {$\bullet$};
+                \node (b) at (3,0) {$\bullet$};
+                \node (c) at (0,3) {$\bullet$};
+                \node (d) at (3,3) {$\bullet$};
+
+                \shiftdraw{a}{b}{0}{1.5pt};
+                \draw[-latex] (a) to[in=270, out=180, looseness=5] (a);
+
+                \shiftdraw{b}{d}{1.5pt}{0};
+
+                \shiftdraw{c}{d}{0}{1.5pt};
+
+                \shiftdraw{d}{c}{0}{-1.5pt};
+            \end{tikzpicture}
+            }
+        \end{center}
+    }
+}
+
+\frame{
+    \frametitle{Objectif de cette partie}
+
+    On se donne un graphe $\graphe$ et on souhaite savoir calculer (efficacement) son graphe des chemins $\graphechem$.
+}
+
+\frame{
+    \frametitle{Propriétés du graphe des chemins}
+
+    \proposition[$\graphechem$ est transitif]{%
+        Soit $\graphedef{}$ un graphe et soit $\graphechemdef$ son graphe des chemins.
+        Quels que soient $\sommet{}, \sommetb{}, \sommetc{} \in \sommetschem{}$ on a $$(\sommet{}, \sommetb{}) \in \arcschem{} \textrm{ et } (\sommetb{}, \sommetc{}) \in \arcschem \Rightarrow (\sommet{}, \sommetc{}) \in \arcschem{}.$$
+    }
+
+    \exercice{%
+        Prouver la proposition.
+    }
+}
+
+\frame{
+    \frametitle{Propriétés du graphe des chemins, suite}
+
+    \definition{%
+        Soient $\graphe{}_1$ et $\graphe{}_2$ des graphes, on note $\graphe{}_1\infgraphe{}\graphe{}_2$ si $\sommets{}_1 \subseteq \sommets{}_2$ et $\arcs{}_1\subseteq\arcs{}_2$.
+    }
+
+    \pause
+
+    \begin{columns}
+        \begin{column}{5.5cm}
+            \proposition{%
+                $\infgraphe{}$ est une relation d'ordre.
+            }
+        \end{column}
+        \begin{column}{5.5cm}
+            \exercice{%
+                Prouver la proposition.
+            }
+        \end{column}
+    \end{columns}
+
+    \pause
+
+    \proposition{%
+        Étant donné un graphe $\graphe{}$, son graphe des chemins $\graphechem{}$ est le plus petit graphe (pour la relation $\infgraphe{}$) transitif qui contient $\graphe{}$~:
+        $$\forall H, \graphe{} \infgraphe{} H \textrm{ et } H \textrm{ transifif } \Rightarrow \graphechem{} \infgraphe{} H$$
+    }
+
+    \exercice{%
+        Prouver la proposition.
+    }
+}
+
+\subsection{Opérations sur les graphes}
+
+\frame{
+    \frametitle{Union}
+
+    À partir de maintenant, on considère que tous les graphes ont le même ensemble $\sommets{}$ de sommets.
+
+    \definition[union de graphes]{%
+        Soient $\graphe{}_1=(\sommets{}, \arcs{}_1)$ et $\graphe{}_2=(\sommets{}, \arcs{}_2)$ deux graphes.
+        L'union de $\graphe{}_1$ et $\graphe{}_2$ est le graphe $\graphe{}_1\uniong{}\graphe{}_2 = (\sommets{}, \arcs{}_1\cup\arcs{}_2)$.
+    }
+
+    \pause
+
+    \begin{columns}
+        \begin{column}{6.5cm}
+            \proposition[associativité]{%
+                $\graphe{}_1\uniong{}(\graphe{}_2\uniong{}\graphe{}_3) = (\graphe{}_1\uniong{}\graphe{}_2)\uniong{}\graphe{}_3$%
+            }
+        \end{column}
+        \begin{column}{4.5cm}
+            \exercice{Le prouver}
+        \end{column}
+    \end{columns}
+
+    \pause
+
+    \begin{columns}
+        \begin{column}{6.5cm}
+            \proposition[élément neutre]{%
+                $\emptyset = (V, \emptyset), \graphe{}\uniong{}\emptyset = \emptyset\uniong{}\graphe{} = \graphe{}$ 
+            }
+        \end{column}
+        \begin{column}{4.5cm}
+            \exercice{Le prouver}
+        \end{column}
+    \end{columns}
+
+    \pause
+
+    \begin{columns}
+        \begin{column}{6.5cm}
+            \proposition[commutativité]{%
+                $\emptyset = (V, \emptyset), \graphe{}\uniong{}\emptyset = \emptyset\uniong{}\graphe{} = \graphe{}$ 
+            }
+        \end{column}
+        \begin{column}{4.5cm}
+            \exercice{Le prouver}
+        \end{column}
+    \end{columns}
+}
+
+\frame{
+    \frametitle{Représentation matricielle}
+
+    \proposition{%
+        Soit $\graphe{}_1$ un graphe représenté par la matrice d'adjacence $\adjmat{\graphe{}_1}=(a_{ij}^1)$ et soit $\graphe{}_2$ un graphe représenté par la matrice d'adjacence $\adjmat{\graphe{}_2} = (a_{ij}^2)$.
+        Soit $\graphe{} = \graphe{}_1\uniong{}\graphe{}_2$ et soit $\adjmat{\graphe{}} = (\adjmatelem{})$ sa matrice d'adjacence.
+        On a~: $$\adjmatelem{} = a_{ij}^1 \vee a_{ij}^2.$$
+    }
+
+    \exercice{Le prouver}
+
+    \pause
+    \vfill
+
+    Conséquence~: on peut voir l'union des graphes comme une \enavant{somme de} leurs \enavant{matrices} d'adjacence.
+}
+
+\frame{
+    \frametitle{Composition}
+
+    \definition[composition de graphes]{%
+    Soient $\graphe{}_1=(\sommets{}, \arcs{}_1)$ et $\graphe{}_2=(\sommets{}, \arcs{}_2)$ deux graphes.
+    La composition de $\graphe{}_1$ et $\graphe{}_2$ est le graphe $\graphe{}_1\compog{}\graphe{}_2 = (\sommets{}, \arcs{})$ tel que~:
+    $$E = \{(\sommet{}, \sommetb{})~|~\exists\sommetc{}, (\sommet{}, \sommetc{})\in\arcs{}_1 \textrm{ et } (\sommetc{}, \sommetb{})\in\arcs{}_2\}.$$
+    }
+
+    \pause
+
+    \begin{columns}
+        \begin{column}{6.5cm}
+            \proposition[associativité]{%
+                $\graphe{}_1\compog{}(\graphe{}_2\compog{}\graphe{}_3) = (\graphe{}_1\compog{}\graphe{}_2)\compog{}\graphe{}_3$%
+            }
+        \end{column}
+        \begin{column}{4.5cm}
+            \exercice{Le prouver}
+        \end{column}
+    \end{columns}
+
+    \pause
+
+    \begin{columns}
+        \begin{column}{6.5cm}
+            \proposition[élément neutre]{%
+                $(\sommets{}, \{(\sommet{}, \sommet{})~|~ \sommet{}\in\sommets{}\})$ 
+            }
+        \end{column}
+        \begin{column}{4.5cm}
+            \exercice{Le prouver}
+        \end{column}
+    \end{columns}
+
+    \pause
+
+    \begin{columns}
+        \begin{column}{6.5cm}
+            \proposition[commutativité]{%
+                La composition n'est pas commutative. 
+            }
+        \end{column}
+        \begin{column}{4.5cm}
+            \exercice{Le prouver}
+        \end{column}
+    \end{columns}
+}
+
+\frame{
+    \frametitle{Composition, suite}
+
+    \proposition[distributivité]{%
+        La composition est distributive par rapport à l'union~:
+        $$(\graphe{}_1\uniong{}\graphe{}_2)\compog{}\graphe{}_3 = (\graphe{}_1\compog{}\graphe{}_3)\uniong{}(\graphe{}_2\compog{}\graphe{}_3)$$
+        $$\graphe{}_1\compog{}(\graphe{}_2\uniong{}\graphe{}_3) = (\graphe{}_1\compog{}\graphe{}_2)\uniong{}(\graphe{}_1\compog{}\graphe{}_3)$$
+    }
+
+    \exercice{Le prouver}
+}
+
+\frame{
+    \frametitle{Représentation matricielle}
+
+    \proposition{%
+        Soit $\graphe{}_1$ un graphe représenté par la matrice d'adjacence $\adjmat{\graphe{}_1}=(a_{ij}^1)$ et soit $\graphe{}_2$ un graphe représenté par la matrice d'adjacence $\adjmat{\graphe{}_2} = (a_{ij}^2)$.
+        Soit $\graphe{} = \graphe{}_1\compog{}\graphe{}_2$ et soit $\adjmat{\graphe{}} = (\adjmatelem{})$ sa matrice d'adjacence.
+        On a~: $$\adjmatelem{} = \bigvee_{k=1}^{\taille{\sommets{}}} a_{ik}^1 \wedge a_{kj}^2.$$
+    }
+
+    \exercice{Le prouver}
+
+    \pause
+    \vfill
+
+    Conséquence~: on peut voir l'union des graphes comme un \enavant{produit de} leurs \enavant{matrices} d'adjacence.
+}
+
+\subsection{Algorithme des puissances}
+
+\frame{}
+
+\subsection{Algorithme de Roy-Warshall}
+
+\frame{}
+
+\subsection{Retrouver les chemins}
+
+\frame{}

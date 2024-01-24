@@ -5,17 +5,36 @@
 \usepackage{xifthen}
 \usepackage{tikz}
 \usetikzlibrary{calc}
+\usepackage{amssymb}
 
 \title{Graphes et Algorithmes}
 \author{loig.jezequel@univ-nantes.fr}
 \date{}
+
+\setbeamertemplate{subsection in toc}[subsections numbered]
 
 \AtBeginSection[]{
     \begin{frame}
         \vfill
         \centering
         \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
-            \usebeamerfont{title}\insertsectionhead\par%
+            \usebeamerfont{title}Partie \thesection~: \insertsectionhead\par%
+        \end{beamercolorbox}
+        \begin{center}
+            \begin{minipage}{5.5cm}
+                \tableofcontents[sections=\value{section}, sectionstyle=hide]
+            \end{minipage}
+        \end{center}
+        \vfill
+    \end{frame}
+}
+
+\AtBeginSubsection[]{
+    \begin{frame}
+        \vfill
+        \centering
+        \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+            \usebeamerfont{title}\thesection.\thesubsection. \insertsubsectionhead\par%
         \end{beamercolorbox}
         \vfill
     \end{frame}
@@ -62,6 +81,7 @@
 \newcommand{\sommets}{V}
 \newcommand{\sommet}{v}
 \newcommand{\sommetb}{v'}
+\newcommand{\sommetc}{v"}
 \newcommand{\pre}[1]{#1^-}
 \newcommand{\suc}[1]{#1^+}
 \newcommand{\graphe}{G}
@@ -79,6 +99,16 @@
 \newcommand{\degs}[1]{\degnot{}^+(#1)}
 \newcommand{\relation}{R}
 \newcommand{\ensemble}{X}
+\newcommand{\cheminvers}{\rightsquigarrow}
+\newcommand{\chemin}{w}
+\newcommand{\graphechem}{\graphe{}^+}
+\newcommand{\arcschem}{\arcs{}^+}
+\newcommand{\sommetschem}{\sommets{}^+}
+\newcommand{\graphechemdef}{\graphechem{}=(\sommetschem{}, \arcschem{})}
+\newcommand{\infgraphe}{\leq_G}
+\newcommand{\sufgraphe}{\geq_G}
+\newcommand{\uniong}{\cup_G}
+\newcommand{\compog}{\circ_G}
 
 % dessins
 \newcommand{\shiftdraw}[4]{\draw[shorten >=7pt, shorten <=7pt, -latex] let \p1 = (#1), \p2 = (#2) in [shift={(#3, #4)}] (\p1) -- (\p2)}
@@ -92,5 +122,7 @@
     \input{intro.tex}
 
     \input{definitions.tex}
+
+    \input{graphedeschemins.tex}
 
 \end{document}
