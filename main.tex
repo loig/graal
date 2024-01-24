@@ -24,6 +24,12 @@
 \newcommand{\enavant}[1]{\textcolor{red}{#1}}
 
 % defs, exercices, etc
+\newcommand{\notation}[2][]{
+    \begin{block}{Notation\ifthenelse{\NOT\isempty{#1}}{~: #1}{}}
+        #2
+    \end{block}
+}
+
 \renewcommand{\definition}[2][]{
     \begin{block}{Définition\ifthenelse{\NOT\isempty{#1}}{~: #1}{}}
         #2
@@ -42,18 +48,40 @@
     \end{alertblock}
 }
 
+\newcommand{\remarque}[2][]{
+    \begin{alertblock}{Remarque\ifthenelse{\NOT\isempty{#1}}{~: #1}{}}
+        #2
+    \end{alertblock}
+}
+
 % notations
 \newcommand{\arcs}{E}
+\newcommand{\arc}{e}
+\newcommand{\arcvers}[1]{t(#1)}
+\newcommand{\arcdepuis}[1]{f(#1)}
 \newcommand{\sommets}{V}
 \newcommand{\sommet}{v}
 \newcommand{\sommetb}{v'}
+\newcommand{\pre}[1]{#1^-}
+\newcommand{\suc}[1]{#1^+}
 \newcommand{\graphe}{G}
 \newcommand{\graphefunc}{\mathcal{G}}
 \newcommand{\graphedef}{\graphe{} = (\sommets{}, \arcs{})}
 \newcommand{\taille}[1]{|#1|}
+\newcommand{\adjmat}[1]{\mathcal{A}_{#1}}
+\newcommand{\adjmatelem}{a_{ij}}
+\newcommand{\incmat}[1]{\mathcal{I}_{#1}}
+\newcommand{\incmatelem}{\textrm{\sc i}_{ij}}
+\newcommand{\voisins}[1]{N(#1)}
+\newcommand{\degnot}{d}
+\newcommand{\degre}[1]{\degnot{}(#1)}
+\newcommand{\dege}[1]{\degnot{}^-(#1)}
+\newcommand{\degs}[1]{\degnot{}^+(#1)}
+\newcommand{\relation}{R}
+\newcommand{\ensemble}{X}
 
 % dessins
-\newcommand{\shiftdraw}[4]{\draw[shorten >=5pt, shorten <=5pt, -latex] let \p1 = (#1), \p2 = (#2) in [shift={(#3, #4)}] (\p1) -- (\p2)}
+\newcommand{\shiftdraw}[4]{\draw[shorten >=7pt, shorten <=7pt, -latex] let \p1 = (#1), \p2 = (#2) in [shift={(#3, #4)}] (\p1) -- (\p2)}
 
 \begin{document}
 

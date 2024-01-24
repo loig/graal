@@ -11,31 +11,35 @@
         \end{itemize}%
     }
 
-    \only<2>{%
-        \exercice{%
-            Soit un graphe $\graphedef{}$.
-            Quel est, en fonction de $\taille{\sommets{}}$, le nombre maximum d'arrêtes de $\graphe{}$ ?%
-        }%
+    \uncover<2->{
+        \only<1-2>{%
+            \exercice{%
+                Soit un graphe $\graphedef{}$.
+                Quel est, en fonction de $\taille{\sommets{}}$, le nombre maximum d'arrêtes de $\graphe{}$ ?%
+            }%
+        }
+
+        \only<3->{%
+            \proposition{%
+                Soit un graphe $\graphedef{}$, on a $\taille{\arcs{}} \leq \taille{\sommets{}}^2$.
+            }%
+        }
     }
 
-    \only<3->{%
-        \proposition{%
-            Soit un graphe $\graphedef{}$, on a $\taille{\arcs{}} \leq \taille{\sommets{}}^2$.
-        }%
-    }
+    \uncover<4->{%
+        \only<1-4>{%
+            \exercice{%
+                Soit un graphe $\graphedef{}$ sans sommets isolés.
+                Quel est, en fonction de $\taille{\sommets{}}$, le nombre minimum d'arrêtes de $\graphe{}$ ?%
+            }%
+        }
 
-    \only<4>{%
-        \exercice{%
-            Soit un graphe $\graphedef{}$ sans sommets isolés.
-            Quel est, en fonction de $\taille{\sommets{}}$, le nombre minimum d'arrêtes de $\graphe{}$ ?%
-        }%
-    }
+        \only<5->{%
+            \proposition{%
+                Soit un graphe $\graphedef{}$ sans sommets isolés, on a $\taille{\arcs{}} \geq \lceil \taille{\sommets{}}/2 \rceil$
 
-    \only<5->{%
-        \proposition{%
-            Soit un graphe $\graphedef{}$ sans sommets isolés, on a $\taille{\arcs{}} \geq \lceil \taille{\sommets{}}/2 \rceil$
-
-        }%
+            }%
+        }
     }
 }
 
@@ -111,6 +115,224 @@
 \frame{
     \frametitle{Les graphes vus comme des matrices}
 
-    \definition[Matrice d'adjacence]{%
+    \definition[matrice d'adjacence]{%
+        Soit $\graphedef{}$ un graphe.
+        On pose $n=\taille{\sommets{}}$ et $\sommets{}=\{\sommet{}_1, \dots, \sommet{}_n\}$.
+        La matrice d'ajacence de $\graphe{}$ est $\adjmat{\graphe{}}=(\adjmatelem{})_{1\leq i, j \leq n}$ telle que~:
+        \begin{eqnarray*}
+            \adjmatelem{} = 1 & \textrm{si} & (\sommet{}_i, \sommet{}_j)\in\arcs{} \\
+            \adjmatelem{} = 0 & \textrm{sinon} &
+        \end{eqnarray*}
+    }
+
+    \pause
+
+    \exercice{%
+        Donner la matrice d'adjacence du graphe suivant~:
+
+        \begin{center}
+        \scalebox{0.6}{%
+            \begin{tikzpicture}
+                \node (a) at (0,0) {$\sommet{}_3$};
+                \node (b) at (3,0) {$\sommet{}_4$};
+                \node (c) at (0,3) {$\sommet{}_1$};
+                \node (d) at (3,3) {$\sommet{}_2$};
+    
+                \draw[-latex] (a) to[in=270, out=180, looseness=5] (a);
+    
+                \shiftdraw{b}{a}{0}{-1.5pt};
+    
+                \shiftdraw{c}{a}{1.5pt}{0};
+                \shiftdraw{c}{d}{0}{1.5pt};
+    
+                \shiftdraw{d}{b}{-1.5pt}{0};
+                \shiftdraw{d}{c}{0}{-1.5pt};
+                \draw[-latex] (d) to[in=90, out=0, looseness=5] (d);
+            \end{tikzpicture}
+        }
+        \end{center}
+    }
+}
+
+\frame{
+    \frametitle{Les graphes vus comme des matrices, suite}
+
+    \notation{%
+        Soit $\graphedef{}$ un graphe et soit $\arc{} = (\sommet{}, \sommetb{})\in\arcs{}$ une arrête, on note $\sommet{} = \arcdepuis{\arc{}}$ et $\sommetb{} = \arcvers{\arc{}}$.
+    }
+
+    \definition[matrice d'incidence]{%
+        Soit $\graphedef{}$ un graphe.
+        On pose $n=\taille{\sommets{}}$ et $\sommets{}=\{\sommet{}_1, \dots, \sommet{}_n\}$.
+        De même, on pose $m=\taille{\arcs{}}$ et $\arcs{}=\{\arc{}_1, \dots, \arc{}_m\}$.
+        La matrice d'incidence de $\graphe{}$ est la matrice $\incmat{\graphe{}} = (\incmatelem{})_{1\leq i\leq n, 1\leq j\leq m}$ telle que~:
+        \begin{eqnarray*}
+            \incmatelem{} = 1 & \textrm{si} & \arcdepuis{\arc{}_j} = \sommet{}_i \\
+            \incmatelem{} = -1 & \textrm{si} & \arcvers{\arc{}_j} = \sommet{}_i \\
+            \incmatelem{} = 0 & sinon &
+        \end{eqnarray*}
+    }
+}
+
+\frame{
+    \frametitle{Les graphes vus comme des matrices, suite, suite}
+
+    \exercice{%
+        Donner la matrice d'incidence du graphe suivant~:
+        \begin{center}
+            \scalebox{0.8}{%
+                \begin{tikzpicture}
+                    \node (a) at (0,0) {$\sommet{}_3$};
+                    \node (b) at (3,0) {$\sommet{}_4$};
+                    \node (c) at (0,3) {$\sommet{}_1$};
+                    \node (d) at (3,3) {$\sommet{}_2$};
+        
+                    \node (tmp) at (1.5,3.3) {$\arc{}_1$};
+                    \node (tmp) at (1.5,2.7) {$\arc{}_2$};
+                    \node (tmp) at (-0.3,1.5) {$\arc{}_3$};
+                    \node (tmp) at (3.3,1.5) {$\arc{}_4$};
+                    \node (tmp) at (1.5,-0.3) {$\arc{}_5$};
+
+                    \shiftdraw{b}{a}{0}{-1.5pt};
+        
+                    \shiftdraw{c}{a}{1.5pt}{0};
+                    \shiftdraw{c}{d}{0}{1.5pt};
+        
+                    \shiftdraw{d}{b}{-1.5pt}{0};
+                    \shiftdraw{d}{c}{0}{-1.5pt};
+                \end{tikzpicture}
+            }
+        \end{center}
+    }
+
+    \pause
+
+    \remarque{%
+        La représentation en matrice d'incidence ne permet pas d'avoir des arcs $\arc{}$ tels que $\arcdepuis{\arc{}} = \arcvers{\arc{}}$.
+    }
+}
+
+\frame{
+    \frametitle{Structures de données classiques}
+
+    Les structures de données qu'on utilise le plus souvent pour représenter les graphes sont les suivantes~:
+    \begin{itemize}
+        \item matrice d'adjacence
+        \item listes de successeurs
+        \item listes de prédécesseurs
+    \end{itemize}
+
+    \pause
+
+    \exercice{%
+        Donner la représentation en listes de successeurs et en listes de prédecesseurs du graphe dont on a précédement donné la matrice d'adjacence.
+    }
+
+    \exercice{%
+        Proposer un algorithme qui permet d'obtenir une représentation en listes de successeurs à partir d'une représentation en matrice d'adjacence.
+    }
+}
+
+\frame{
+    \frametitle{Voisins}
+
+    \definition[prédecesseurs]{%
+        Dans un graphe $\graphedef{}$ l'ensemble des prédecesseurs d'un sommet $\sommet{}\in\sommets{}$ est noté~:
+        $$\pre{\sommet{}} = \{\sommetb{}~|~(\sommetb{},\sommet{}\in\arcs{})\}$$
+    }
+
+    \definition[successeurs]{%
+        Dans un graphe $\graphedef{}$ l'ensemble des successeurs d'un sommet $\sommet{}\in\sommets{}$ est noté~:
+        $$\suc{\sommet{}} = \{\sommetb{}~|~(\sommet{},\sommetb{}\in\arcs{})\}$$
+    }
+
+    \definition[voisins d'un sommet]{%
+        Soit un graphe $\graphedef{}$, soit un sommet $\sommet{}\in\sommets{}$, on appelle voisins de $\sommet{}$ les sommets qui sont soit des prédécesseurs soit des successeurs de $\sommet{}$, c'est-à-dire les sommets de l'ensemble $\voisins{\sommet{}} = \pre{\sommet{}}\cup\suc{\sommet{}}$.
+    }
+}
+
+\frame{
+    \frametitle{Degré}
+
+    \definition[degré entrant]{%
+        Soit un graphe $\graphedef{}$, soit un sommet $\sommet{}\in\sommets{}$, le degré entrant de $\sommet{}$ est $\dege{\sommet{}} = \taille{\pre{\sommet{}}}$.
+    }
+
+    \definition[degré sortant]{%
+        Soit un graphe $\graphedef{}$, soit un sommet $\sommet{}\in\sommets{}$, le degré sortant de $\sommet{}$ est $\degs{\sommet{}} = \taille{\suc{\sommet{}}}$.
+    }
+
+    \definition[degré d'un sommet]{%
+        Soit un graphe $\graphedef{}$, soit un sommet $\sommet{}\in\sommets{}$, le degré de $\sommet{}$ est $\degre{\sommet{}} = \dege{\sommet{}} + \degs{\sommet{}}$.
+    }
+
+    \definition[degré d'un graphe]{%
+        Soit un graphe $\graphedef{}$, le degré de $\graphe{}$ est $\degre{\graphe{}} = \max_{\sommet{}\in\sommets{}} \degre{\sommet{}}$
+    }
+}
+
+\frame{
+    \frametitle{Graphes et relations binaires}
+
+    On peut représenter une relation binaire $\relation{}$ sur un ensemble fini $\ensemble{}$ par un graphe $\graphedef{}$ dont
+    \begin{itemize}
+        \item les sommets sont les éléments de l'ensemble~: $\sommets{} = \ensemble{}$,
+        \item les arrêtes représentent la relation~: $(x, y) \in \arcs{} \Leftrightarrow x\relation{}y$.
+    \end{itemize}
+
+    Un certain nombre de caractéristiques de la relation peuvent alors se repérer visuellement sur le graphe.
+
+    \begin{columns}
+        \begin{column}{5.5cm}
+            \begin{block}{Réflexivité~: $\forall x, x\relation{}x$}
+                \begin{center}
+                    \begin{tikzpicture}
+                        \node (a) at (0,0) {$x$};
+                        \draw[-latex] (a) to[in=90, out=0, looseness=5] (a);
+                    \end{tikzpicture}
+                \end{center}
+            \end{block}
+            \begin{block}{Symétrie~: $\forall x, y, x\relation{}y \Rightarrow y\relation{}x$}
+                \begin{center}
+                    \begin{tikzpicture}
+                        \node (a) at (0,0) {$x$};
+                        \node (b) at (2,0) {$y$};
+                        \shiftdraw{a}{b}{0}{1.5pt};
+                        \shiftdraw{b}{a}{0}{-1.5pt};
+                    \end{tikzpicture}
+                \end{center}
+            \end{block}
+        \end{column}
+        \begin{column}{5.5cm}
+            \begin{block}{Transitivité~: $\forall x, y, z, x\relation{}y \textrm{ et } y\relation{}z \Rightarrow x\relation{}z$}
+                \begin{center}
+                    \begin{tikzpicture}
+                        \node (a) at (0,0) {$x$};
+                        \node (b) at (2,0) {$y$};
+                        \node (c) at (4,0) {$z$};
+                        \shiftdraw{a}{b}{0}{0};
+                        \shiftdraw{b}{c}{0}{0};
+                        \draw[-latex] (a) to[out=45, in=135] (c);
+                    \end{tikzpicture}
+                \end{center}
+            \end{block}
+        \end{column}
+    \end{columns}
+}
+
+\frame{
+    \frametitle{Graphes et relations binaires, suite}
+
+    \exercice[relation d'équivalence]{%
+        Comment peut-on caractériser le graphe représentant une relation d'équivalence (réflexive, symétrique et transitive) ?
+    }
+
+    \exercice[antisymmétrie]{%
+        Une relation $\relation{}$ est dite antisymétrique si $\forall x, y, x\relation{}y \textrm{ et } y\relation{}x \Rightarrow x = y$.
+        Comment cela se traduit-il visuellement dans un graphe ?
+    }
+
+    \exercice[relation d'ordre]{%
+        Coment peut-on caractériser le graphe représentant une relation d'ordre (réflexive, antisymétrique et transitive)
     }
 }
