@@ -1,0 +1,116 @@
+\section{Définitions de base}
+
+\frame{
+    \frametitle{Graphe}
+
+    \definition{%
+        Un graphe est est un couple $\graphedef{}$ avec~:
+        \begin{itemize}
+            \item $\sommets{}$ un ensemble \enavant{fini} de sommets,
+            \item $\arcs{} \subseteq \sommets{}\times\sommets{}$ un ensemble \enavant{fini} d'arrêtes.
+        \end{itemize}%
+    }
+
+    \only<2>{%
+        \exercice{%
+            Soit un graphe $\graphedef{}$.
+            Quel est, en fonction de $\taille{\sommets{}}$, le nombre maximum d'arrêtes de $\graphe{}$ ?%
+        }%
+    }
+
+    \only<3->{%
+        \proposition{%
+            Soit un graphe $\graphedef{}$, on a $\taille{\arcs{}} \leq \taille{\sommets{}}^2$.
+        }%
+    }
+
+    \only<4>{%
+        \exercice{%
+            Soit un graphe $\graphedef{}$ sans sommets isolés.
+            Quel est, en fonction de $\taille{\sommets{}}$, le nombre minimum d'arrêtes de $\graphe{}$ ?%
+        }%
+    }
+
+    \only<5->{%
+        \proposition{%
+            Soit un graphe $\graphedef{}$ sans sommets isolés, on a $\taille{\arcs{}} \geq \lceil \taille{\sommets{}}/2 \rceil$
+
+        }%
+    }
+}
+
+\frame{
+    \frametitle{Vocabulaire}
+
+    \definition[Successeurs]{%
+        Dans un graphe $\graphedef{}$ les successeurs d'un sommet $\sommet{}\in\sommets{}$ sont les sommets $\sommetb{}\in\sommets{}$ tels que $(\sommet{}, \sommetb{})\in\arcs{}$.
+    }
+
+    \definition[Prédecesseurs]{%
+        Dans un graphe $\graphedef{}$ les prédecesseurs d'un sommet $\sommet{}\in\sommets{}$ sont les sommets $\sommetb{}\in\sommets{}$ tels que $(\sommetb{}, \sommet{})\in\arcs{}$.
+    }
+
+    \definition[Graphe complet]{%
+        Un graphe $\graphedef{}$ est dit complet si $\arcs{} = \sommets{}\times\sommets{}$.
+    }
+
+}
+
+\frame{
+    \frametitle{Dessiner les graphes}
+
+    \begin{figure}
+        \begin{tikzpicture}
+            \node (a) at (0,0) {$\bullet$};
+            \node (b) at (3,0) {$\bullet$};
+            \node (c) at (0,3) {$\bullet$};
+            \node (d) at (3,3) {$\bullet$};
+
+            \shiftdraw{a}{b}{0}{1.5pt};
+            \shiftdraw{a}{c}{-1.5pt}{0};
+            \shiftdraw{a}{d}{-1pt}{1pt};
+            \draw[-latex] (a) to[in=270, out=180, looseness=5] (a);
+
+            \shiftdraw{b}{a}{0}{-1.5pt};
+            \shiftdraw{b}{c}{1pt}{1pt};
+            \shiftdraw{b}{d}{1.5pt}{0};
+            \draw[-latex] (b) to[in=0, out=270, looseness=5] (b);
+
+            \shiftdraw{c}{a}{1.5pt}{0};
+            \shiftdraw{c}{b}{-1pt}{-1pt};
+            \shiftdraw{c}{d}{0}{1.5pt};
+            \draw[-latex] (c) to[in=180, out=90, looseness=5] (c);
+
+            \shiftdraw{d}{a}{1pt}{-1pt};
+            \shiftdraw{d}{b}{-1.5pt}{0};
+            \shiftdraw{d}{c}{0}{-1.5pt};
+            \draw[-latex] (d) to[in=90, out=0, looseness=5] (d);
+        \end{tikzpicture}
+        \caption{Un graphe complet à 4 sommets}
+    \end{figure}
+}
+
+\frame{
+    \frametitle{Les graphes vus comme des fonctions}
+
+    \definition[À partir des successeurs]{%
+        \begin{eqnarray*}
+            \graphefunc{} & : & \sommets{} \rightarrow 2^\sommets{} \\
+                          &   & \sommet{} \mapsto \{ \sommetb{}~|~(\sommet{}, \sommetb{})\in \arcs{} \}
+        \end{eqnarray*}
+    }
+
+    \definition[À partir des prédecesseurs]{%
+        \begin{eqnarray*}
+            \graphefunc{} & : & \sommets{} \rightarrow 2^\sommets{} \\
+                          &   & \sommet{} \mapsto \{ \sommetb{}~|~(\sommetb{}, \sommet{})\in \arcs{} \}
+        \end{eqnarray*}
+    }
+}
+
+\frame{
+    \frametitle{Les graphes vus comme des matrices}
+
+    \definition[Matrice d'adjacence]{%
+    }
+}

@@ -2,6 +2,10 @@
 
 \usetheme{Boadilla}
 
+\usepackage{xifthen}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
 \title{Graphes et Algorithmes}
 \author{loig.jezequel@univ-nantes.fr}
 \date{}
@@ -19,6 +23,38 @@
 
 \newcommand{\enavant}[1]{\textcolor{red}{#1}}
 
+% defs, exercices, etc
+\renewcommand{\definition}[2][]{
+    \begin{block}{Définition\ifthenelse{\NOT\isempty{#1}}{~: #1}{}}
+        #2
+    \end{block}
+}
+
+\newcommand{\exercice}[2][]{
+    \begin{exampleblock}{Exercice\ifthenelse{\NOT\isempty{#1}}{~: #1}{}}
+        #2
+    \end{exampleblock}
+}
+
+\newcommand{\proposition}[2][]{
+    \begin{alertblock}{Proposition\ifthenelse{\NOT\isempty{#1}}{~: #1}{}}
+        #2
+    \end{alertblock}
+}
+
+% notations
+\newcommand{\arcs}{E}
+\newcommand{\sommets}{V}
+\newcommand{\sommet}{v}
+\newcommand{\sommetb}{v'}
+\newcommand{\graphe}{G}
+\newcommand{\graphefunc}{\mathcal{G}}
+\newcommand{\graphedef}{\graphe{} = (\sommets{}, \arcs{})}
+\newcommand{\taille}[1]{|#1|}
+
+% dessins
+\newcommand{\shiftdraw}[4]{\draw[shorten >=5pt, shorten <=5pt, -latex] let \p1 = (#1), \p2 = (#2) in [shift={(#3, #4)}] (\p1) -- (\p2)}
+
 \begin{document}
 
     \frame{
@@ -26,5 +62,7 @@
     }
 
     \input{intro.tex}
+
+    \input{definitions.tex}
 
 \end{document}
