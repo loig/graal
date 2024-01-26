@@ -180,6 +180,34 @@
 }
 
 \frame{
+    \frametitle{Algorithme pour calculer une union de graphes}
+
+    \begin{center}
+        \begin{minipage}{8cm}
+            \begin{algorithmic}
+                \In{$\graphe{}_1 = (\sommets{}, \arcs{}_1)$, $\graphe{}_2 = (\sommets{}, \arcs{}_2)$}
+                \Out{$\graphedef{} = \graphe{}_1\uniong\graphe{}_2$}
+                \State $\arcs{} = \emptyset$
+                \ForAll{$\sommet{} \in \sommets{}$} 
+                    \ForAll{$\sommetb{} \in \sommets{}$}
+                        \If{$(\sommet{}, \sommetb{})\in \arcs{}_1$ {\bf or} $(\sommet{}, \sommetb{})\in \arcs{}_2$}
+                            \State $\arcs{} = \arcs{}\cup \{(\sommet{}, \sommetb{})\}$
+                        \EndIf
+                    \EndFor
+                \EndFor 
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+
+    \vspace{1cm}
+    \pause
+
+    \exercice{%
+        Donner la complexité de cet algorithme.
+    }
+}
+
+\frame{
     \frametitle{Composition}
 
     \definition[composition de graphes]{%
@@ -257,9 +285,220 @@
     Conséquence~: on peut voir l'union des graphes comme un \enavant{produit de} leurs \enavant{matrices} d'adjacence.
 }
 
+\frame{
+    \frametitle{Algorithme pour calculer une composition de graphes}
+
+    \begin{center}
+        \begin{minipage}{9cm}
+            \begin{algorithmic}
+                \In{$\graphe{}_1 = (\sommets{}, \arcs{}_1)$, $\graphe{}_2 = (\sommets{}, \arcs{}_2)$}
+                \Out{$\graphedef{} = \graphe{}_1\compog\graphe{}_2$}
+                \State $\arcs{} = \emptyset$
+                \ForAll{$\sommet{} \in \sommets{}$} 
+                    \ForAll{$\sommetc{} \in \sommets{}$}
+                        \ForAll{$\sommetb{} \in \sommets{}$}
+                            \If{$(\sommet{}, \sommetb{})\in \arcs{}_1$ {\bf and} $(\sommetb{}, \sommetc{})\in \arcs{}_2$}
+                                \State $\arcs{} = \arcs{}\cup \{(\sommet{}, \sommetc{})\}$
+                            \EndIf
+                        \EndFor
+                    \EndFor
+                \EndFor 
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+
+    \pause
+
+    \exercice{%
+        Donner la complexité de cet algorithme.
+    }
+
+    \pause
+
+    \exercice{%
+        Proposer une optimisation simple permettant souvent de réduire le nombre de tours de la boucle interne.
+    }
+}
+
 \subsection{Algorithme des puissances}
 
-\frame{}
+\frame{
+    \frametitle{Exercice introductif}
+
+    \exercice{%
+        \begin{columns}
+            \begin{column}{6cm}
+                On considère le graphe $\graphe{}$ suivant~:
+                
+                ~
+                
+                \begin{tikzpicture}
+                    \node (a) at (0,0) {$\sommet{}_3$};
+                    \node (b) at (3,0) {$\sommet{}_4$};
+                    \node (c) at (0,3) {$\sommet{}_1$};
+                    \node (d) at (3,3) {$\sommet{}_2$};
+
+                    \node (tmp) at (1.5, 3.3) {$\arc{}_1$};
+                    \node (tmp) at (3.3, 1.5) {$\arc{}_3$};
+                    \node (tmp) at (1.2, 1.8) {$\arc{}_2$};
+                    \node (tmp) at (-0.7, -0.7) {$\arc{}_4$};
+
+                    \shiftdraw{a}{d}{-1pt}{1pt};
+                    \draw[-latex] (a) to[in=270, out=180, looseness=5] (a);
+
+                    \shiftdraw{c}{d}{0}{1.5pt};
+
+                    \shiftdraw{d}{b}{-1.5pt}{0};
+                \end{tikzpicture}
+            \end{column}
+            \begin{column}{5cm}
+                \begin{itemize}
+                    \item Calculer $\graphe{}\compog{}\graphe{}$.
+                    \item Quel est le lien entre les arrêtes de $\graphe{}\compog{}\graphe{}$ et les chemins de $\graphe{}$ ?
+                    \item Calculer $\graphe{}\uniong{}(\graphe{}\compog{}\graphe{})$.
+                    \item Quel est le lien entre les arrêtes de $\graphe{}\uniong{}(\graphe{}\compog{}\graphe{})$ et les chemins de $\graphe{}$ ?
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    }
+}
+
+\frame{
+    \frametitle{Une suite intéressante}
+
+    \definition{%
+        Étant donné un graphe $\graphe{}$, soit la suite $\suitepuiss{}$ définie par~:
+        \begin{eqnarray*}
+            \suiteelem{1} & = & \graphe{} \\
+            \suiteelem{n} & = & \suiteelem{n-1}\compog{}\graphe{}
+        \end{eqnarray*}
+    }
+
+    \pause
+
+    \proposition{%
+        Le n-ième terme $\suiteelem{n} = (\sommets{}, \arcs{}_n)$ de cette suite est tel que~:
+        $$\arcs{}_n = \{(\sommet{}, \sommetb{})~|~\exists \textrm{ chemin de longueur } n \textrm{ de } \sommet{} \textrm{ à } \sommetb{} \textrm{ dans } \graphe{}\}$$
+    }
+
+    \exercice{%
+        Prouver la proposition (on peut le faire par récurrence sur la longueur des chemins/le numéro du terme de la suite).
+    }
+}
+
+\frame{
+    \frametitle{Une suite intéressante, suite}
+
+    \proposition{%
+        Pour tout graphe $\graphedef{}$ on a~:
+        $$\graphechem{} = \underset{n=1~~}{\overset{\taille{\arcs{}}~~}{\uniong{}}} \suiteelem{n} = \underset{n=1~~}{\overset{\taille{\sommets{}}~~}{\uniong{}}} \suiteelem{n}$$
+    }
+
+    \exercice{%
+        Prouver la proposition (cela revient essentiellement à prouver que s'il y a un chemin de $\sommet{}$ à $\sommetb{}$ dans $\graphe{}$ alors il en existe un de longueur $\leq \taille{\arcs{}}$ et un de longueur $\leq \taille{\sommets{}}$).
+    }
+
+    \pause
+
+    \begin{center}
+        Cette proposition donne une méthode de calcul de $\graphechem{}$ à partir de $\graphe{}$.
+    \end{center}
+
+    \pause
+
+    \exercice{%
+        Soit un graphe $\graphedef{}$.
+        Combien de compositions et d'unions fait-on pour calculer $\graphechem{}$ avec cette méthode ?
+        (on peut noter $n = \min(\taille{\sommets{}}, \taille{\arcs{}})$.)%
+    }
+}
+
+\frame{
+    \frametitle{Une suite encore plus intéressante}
+
+    \definition[Schéma de Hörner]{%
+        Étant donné un graphe $\graphe{}$, on appelle schéma de Hörner la suite $\horner{}$ définie par~:
+        \begin{eqnarray*}
+            \hornerelem{1} & = & \graphe{} \\
+            \hornerelem{n} & = & (\hornerelem{n-1} \compog{} \graphe{}) \uniong{} \graphe{}
+        \end{eqnarray*}
+    }
+
+    \proposition{%
+        $$\hornerelem{\taille{\sommets{}}} = \hornerelem{\taille{\arcs{}}} = \graphechem{}$$
+    }
+
+    \pause
+
+    \exercice{%
+        Prouver la proposition. 
+        On pourra pour cela montrer par récurrence sur $n$ que $\hornerelem{n} = \uniong{}_{k=1}^n \suiteelem{k}$ pour tout $n\geq 1$.
+    }
+}
+
+\frame{
+    \frametitle{Une suite encore plus intéressante, suite}
+
+    \exercice{%
+        Soit un graphe $\graphedef{}$.
+        Combien d'unions et de compositions fait-on pour calculer $\graphechem{}$ à l'aide du schéma de Hörner ?
+    }
+
+    \pause
+
+    Le schéma de Hörner est donc plus efficace que le simple calcul de la suite précédente.
+    On peut encore améliorer cela à partir de la proposition suivante.
+    On aboutit alors à un algorithme qu'on appelle \enavant{algorithme des puissances}.
+
+    \proposition{%
+        Si $\hornerelem{p} = \hornerelem{p+1}$ alors $\forall q \geq p, \hornerelem{q} = \hornerelem{p}$.
+    }
+
+    \pause
+
+    \exercice{%
+        Prouver la proposition (par récurrence).
+    }
+}
+
+\frame{
+    \frametitle{Algorithme des puissances}
+
+    \begin{center}
+        \begin{minipage}{6cm}
+            \begin{algorithmic}
+                \In{$\graphedef{}$}
+                \Out{$\hornerelem{} = \graphechem{}$}
+                \State $\hornerelem{} = \graphe{}$
+                \State $\hornerelem{t} = (\sommets{}, \emptyset)$
+                \While{$\hornerelem{} \neq \hornerelem{t}$} 
+                    \State $\hornerelem{t} = \hornerelem{}$
+                    \State $\hornerelem{} = (\hornerelem{} \compog{} \graphe{}) \uniong{} \graphe{}$
+                \EndWhile
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+
+    \exercice{%
+        Quelle est la complexité de l'algorithme des puissances en fonction de $n=\min(\taille{\sommets{}}, \taille{\arcs{}})$
+    }
+}
+
+\frame{
+    \frametitle{Algorithme des puissances, suite}
+
+    \remarque{%
+        Le véritable temps d'exécution de cet algorithme varie fortement en fonction du graphe considéré~: il peut s'arrêter très vite ou, au contraire, effectuer son maximum de $\min(\taille{\sommets{}}, \taille{\arcs{}})$ itérations.
+    }
+
+    \exercice{%
+        Proposer un graphe (avec un ensemble de sommets et un ensemble d'arcs non vides) $\graphe{}_{min}$ tel qu'on ne fasse qu'une seule itération de la boucle de l'algorithme des puissances pour calculer son graphe des chemins.
+    }
+
+    \exercice{%
+        Proposer un graphe $\graphe{}_{max}$ tel qu'on atteigne les $\min(\taille{\sommets{}}, \taille{\arcs{}})$ itérations pour calculer le graphe des chemins de $\graphe{}_{max}$ avec l'algorithme des puissances.
+    }
+}
 
 \subsection{Algorithme de Roy-Warshall}
 
