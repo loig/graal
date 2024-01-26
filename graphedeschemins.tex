@@ -502,7 +502,133 @@
 
 \subsection{Algorithme de Roy-Warshall}
 
-\frame{}
+\frame{
+    \frametitle{Idée générale}
+
+    On va présenter ici un algorithme dont la complexité est meilleure que celle de l'algorithme des puissances~: de l'ordre de $\taille{\sommets{}}^3$.
+
+    \pause
+
+    \vfill{}
+
+    Pour toute cette partie on travail sur un graphe $\graphedef$ et on ordonne (arbitrairement) les sommets de $\sommets{}$.
+
+    \notation{%
+        On pose $\sommets{} = \{\sommet{}_1, \sommet{}_2, \dots, \sommet{}_n\}$ et $\sommet{}_1 < \sommet{}_2 < \dots < \sommet{}_n$.%
+    }
+
+    \notation{%
+        On note $\sommets{}_i = \{\sommet{}_1, \sommet{}_2, \dots, \sommet{}_i\}$, l'ensemble des sommets qui arrivent avant $\sommet{}_i$ selon l'ordre choisi.%
+    }
+
+    \proposition{%
+        $$\emptyset \subset \sommets{}_0 \subset \sommets{}_1 \subset \dots \subset \sommets{}_n = \sommets{}$$%
+    }
+}
+
+\frame{
+    \frametitle{Idée générale, suite}
+
+    On s'intéresse aux chemins constitués uniquement des sommets d'un sous ensemble $\sommets{}_i$ donné, au lieu de s'intéresser aux chemins d'une longueur donnée comme dans l'algorithme des puissances.
+
+    \notation{%
+        \begin{eqnarray*}
+            \roy{i} = \{(\sommet{}, \sommetb{}) & | & \exists \sommet\sommet{}_{i_1}\sommet{}_{i_2}\dots\sommet{}_{i_k}\sommetb{} \textrm{ un chemin de } \graphe{} \\
+                                               &   & \textrm{ tel que } \{\sommet{}_{i_1}, \sommet{}_{i_2}, \dots, \sommet{}_{i_k}\} \in \sommets{}_i\}
+        \end{eqnarray*}%
+    }
+
+    \pause
+
+    \proposition{%
+        $$\forall i\geq 0, \roy{i} \subseteq \roy{i+1}$$
+    }
+
+    \exercice{%
+        Prouver la proposition.
+    }
+}
+
+\frame{
+    \frametitle{Idée générale, suite, suite}
+
+    \proposition{%
+        $$\forall i\geq 0, \arcs{} \subseteq \roy{i}$$
+    }
+
+    \exercice{%
+        Prouver la proposition.
+    }
+
+    \pause
+
+    \proposition{%
+        $$\graphechem{} = (\sommets{}, \roy{\taille{\sommets{}}}))$$
+    }
+
+    \exercice{%
+        Prouver la proposition.
+    }
+}
+
+\frame{
+    \frametitle{Propriété fondamentale}
+
+    \proposition{%
+        $$\forall i\geq 0, \roy{i+1} = \roy{i} \cup \{ (\sommet{}, \sommetb{}) ~|~ (\sommet{}, \sommet{}_{i+1}) \in \roy{i} \textrm{ et} (\sommet{}_{i+1}, \sommetb{}) \in \roy{i}\}$$
+    }
+
+    \pause
+
+    Pour faire la preuve on passe par le lemme suivant.
+
+    \definition[chemin élémentaire]{%
+        Soit $\chemin{} = \sommet{}_1\sommet{}_2\dots\sommet{}_n$ un chemin d'un graphe $\graphe{}$.
+        Si $\forall (i,j) \neq (1,n), \sommet{}_i\neq\sommet{}_j$ alors $\chemin{}$ est dit élémentaire.
+    }
+
+    \proposition[lemme pour la preuve de la proposition précédente]{%
+        Soit $\graphe{}$ un graphe, s'il existe un chemin de $\sommet{}$ à $\sommetb{}$ dans $\graphe{}$ alors il existe un chemin élémentaire qui n'utilise pas plus de sommets de $\sommet{}$ à $\sommetb{}$ dans $\graphe{}$.
+    }
+
+    \pause
+
+    \exercice{%
+        Prouver le lemme.
+    }
+}
+
+\frame{
+    \frametitle{Vers l'algorithme de Roy-Warshall}
+
+    \exercice{%
+        À l'aide du lemme, prouver la proposition précédente puis déduire de celle-ci un algorithme pour calculer $\graphechem$ à partir des $\roy{i}$.
+    }
+
+    \pause
+
+    \vfill{}
+
+    \begin{center}
+        \begin{minipage}{9cm}
+            \begin{algorithmic}
+                \In{$\graphedef{}$}
+                \Out{$(\sommets{}, \roy{\taille{\sommets{}}}) = \graphechem{}$}
+                \State $\roy{0} = \arcs{}$
+                \For{$i = 1$ {\bf to} $\taille{\sommets}$}
+                    \State $\roy(i) = \roy{i-1}$
+                    \ForAll{$\sommet{} \in \sommets{}$}
+                        \ForAll{$\sommetb{} \in \sommets{}$}
+                            \If{$(\sommet{}, \sommet{}_i) \in \roy{i-1}$ {\bf and} $(\sommet{}_i, \sommetb{}) \in \roy{i-1}$}
+                                \State $\roy{i} = \roy{i} \cup \{(\sommet{}, \sommetb{})\}$
+                            \EndIf
+                        \EndFor
+                    \EndFor
+                \EndFor
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+}
 
 \subsection{Retrouver les chemins}
 
