@@ -616,7 +616,7 @@
                 \Out{$(\sommets{}, \roy{\taille{\sommets{}}}) = \graphechem{}$}
                 \State $\roy{0} = \arcs{}$
                 \For{$i = 1$ {\bf to} $\taille{\sommets}$}
-                    \State $\roy(i) = \roy{i-1}$
+                    \State $\roy{i} = \roy{i-1}$
                     \ForAll{$\sommet{} \in \sommets{}$}
                         \ForAll{$\sommetb{} \in \sommets{}$}
                             \If{$(\sommet{}, \sommet{}_i) \in \roy{i-1}$ {\bf and} $(\sommet{}_i, \sommetb{}) \in \roy{i-1}$}
@@ -630,6 +630,157 @@
     \end{center}
 }
 
+\frame{
+    \frametitle{Algorithme de Roy-Warshall}
+
+    \remarque{%
+        Dans l'algorithme précédent il n'est pas nécessaire de faire une distinction entre $\roy{i}$ et $\roy{i-1}$~: on pourrait simplement vérifier que $(\sommet{}, \sommet{}_i)\in \roy{i}$ et $(\sommet{}_i, \sommetb{})\in \roy{i}$.
+    }
+
+    \pause
+
+    On déduit de cette remarque l'algorithme de Roy-Warshall~:
+
+    \begin{center}
+        \begin{minipage}{9cm}
+            \begin{algorithmic}
+                \In{$\graphedef{}$}
+                \Out{$\graphechemdef{} = (\sommets{}, \arcschem{})$}
+                \State $\arcschem{} = \arcs{}$
+                \ForAll{$\sommet{}_i \in \sommets{}$}
+                    \ForAll{$\sommet{} \in \sommets{}$}
+                        \ForAll{$\sommetb{} \in \sommets{}$}
+                            \If{$(\sommet{}, \sommet{}_i) \in \arcschem{}$ {\bf and} $(\sommet{}_i, \sommetb{}) \in \arcschem{}$}
+                                \State $\arcschem{} = \arcschem{} \cup \{(\sommet{}, \sommetb{})\}$
+                            \EndIf
+                        \EndFor
+                    \EndFor
+                \EndFor
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+}
+
 \subsection{Retrouver les chemins}
 
-\frame{}
+\frame{
+    \frametitle{Retour sur Roy-Warshall}
+
+    \begin{center}
+        \begin{minipage}{12cm}
+            \begin{algorithmic}
+                \In{$\graphedef{}$}
+                \Out{$\chemin{}$ tel que $\chemin{}(\sommet{}, \sommetb{})$ est un chemin de $\sommet{}$ à $\sommetb{}$ ssi il en existe}
+                \ForAll{$(\sommet{}, \sommetb{})\in \arcs{}$}
+                    \State $\chemin{}(\sommet{}, \sommetb{}) = (\sommet{}, \sommetb{})$
+                \EndFor
+                \ForAll{$\sommet{}_i \in \sommets{}$}
+                    \ForAll{$\sommet{} \in \sommets{}$}
+                        \ForAll{$\sommetb{} \in \sommets{}$}
+                            \If{$\chemin{}(\sommet{}, \sommetb{})$ n'est pas défini}
+                                \If{$\chemin{}(\sommet{}, \sommet{}_i)$ est défini {\bf and} $\chemin{}(\sommet{}_i, \sommetb{})$ est défini}
+                                    \State $\chemin{}(\sommet{}, \sommetb{}) = \chemin{}(\sommet{}, \sommet{}_i).\chemin{}(\sommet_i{}, \sommetb{})$
+                                \EndIf
+                            \EndIf
+                        \EndFor
+                    \EndFor
+                \EndFor
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+}
+
+\frame{
+    \frametitle{Retour sur Roy-Warshall, propriétés}
+
+    \proposition{%
+        Si $\chemin{}(\sommet{}, \sommetb{})$ est défini alors c'est un chemin de $\sommet{}$ à $\sommetb{}$ dans $\graphe{}$.%
+    }
+
+    \exercice{%
+        Prouver la proposition.%
+    }
+
+    \pause
+
+    \proposition{%
+        S'il existe un chemin de $\sommet{}$ à $\sommetb{}$ alors $\chemin{}(\sommet{}, \sommetb{})$ est défini.
+    }
+
+    \exercice{%
+        Prouver la proposition.%
+    }
+}
+
+\frame{
+    \frametitle{Tables de routage}
+
+    On peut stocker les chemins plus efficacement en utilisant une table de routage~:
+
+    \begin{center}
+        \begin{minipage}{12cm}
+            \begin{algorithmic}
+                \In{$\graphedef{}$}
+                \Out{$\route{}$ tel que $\route{}(\sommet{}, \sommetb{})$ est le premier sommet par lequel on passe sur un chemin de $\sommet{}$ à $\sommetb{}$ ssi il en existe}
+                \ForAll{$(\sommet{}, \sommetb{})\in \arcs{}$}
+                    \State $\route{}(\sommet{}, \sommetb{}) = \sommetb{}$
+                \EndFor
+                \ForAll{$\sommet{}_i \in \sommets{}$}
+                    \ForAll{$\sommet{} \in \sommets{}$}
+                        \ForAll{$\sommetb{} \in \sommets{}$}
+                            \If{$\route{}(\sommet{}, \sommetb{})$ n'est pas défini}
+                                \If{$\route{}(\sommet{}, \sommet{}_i)$ est défini {\bf and} $\route{}(\sommet{}_i, \sommetb{})$ est défini}
+                                    \State $\route{}(\sommet{}, \sommetb{}) = \route{}(\sommet{}, \sommet{}_i)$
+                                \EndIf
+                            \EndIf
+                        \EndFor
+                    \EndFor
+                \EndFor
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+}
+
+\frame{
+    \frametitle{Tables de routage, suite}
+
+    \exercice{%
+        \begin{columns}
+            \begin{column}{6cm}
+                On considère le graphe $\graphe{}$ suivant~:
+                
+                ~
+                
+                \begin{tikzpicture}
+                    \node (a) at (0,0) {$\sommet{}_3$};
+                    \node (b) at (3,0) {$\sommet{}_4$};
+                    \node (c) at (0,3) {$\sommet{}_1$};
+                    \node (d) at (3,3) {$\sommet{}_2$};
+
+                    \node (tmp) at (1.5, 3.3) {$\arc{}_1$};
+                    \node (tmp) at (3.3, 1.5) {$\arc{}_2$};
+                    \node (tmp) at (1.2, 1.8) {$\arc{}_5$};
+                    \node (tmp) at (3.7, 3.7) {$\arc{}_4$};
+                    \node (tmp) at (1.5, -0.3) {$\arc{}_3$};
+
+                    \shiftdraw{a}{d}{-1pt}{1pt};
+
+                    \shiftdraw{c}{d}{0}{1.5pt};
+
+                    \shiftdraw{d}{b}{-1.5pt}{0};
+                    \draw[-latex] (d) to[in=0, out=90, looseness=5] (d);
+
+                    \shiftdraw{b}{a}{0}{1.5pt};
+                \end{tikzpicture}
+            \end{column}
+            \begin{column}{5cm}
+                \begin{itemize}
+                    \item Calculer $\route{}(\sommet{}, \sommetb{})$ pour tout $\sommet{}\in\sommets{}$ et tout $\sommetb{}\in\sommets{}$.
+                    \item Le représenter comme une matrice ($\route{}(\sommet{}_i, \sommet{}_j)$ sera indiqué dans la case $(i,j)$ de la matrice)
+                    \item En déduire un chemin de $\sommet{}_1$ à $\sommet{}_3$.
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    }
+
+}
