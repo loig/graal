@@ -1,0 +1,77 @@
+\section{Chemins optimaux}
+
+\frame{
+    \frametitle{Définitons}
+
+    \definition[graphe valué]{%
+        Un graphe valué est un triplet $\grapheval{}$ où $(\sommets{}, \arcs{})$ est un graphe et $\cout{}: \arcs{}\rightarrow \mathbb{R}$ est une fonction de coût.
+    }
+
+    \definition[coût d'un chemin]{%
+        Soit $\grapheval{}$ un graphe valué, soit $\chemin{} = \sommet{}_1,\dots,\sommet{}_n$ un chemin de $(\sommets{}, \arcs{})$, le coût de $\chemin{}$ est 
+        $$\cout{}(\chemin{}) = \sum_{i=2}^{n}\cout{}((\sommet{}_{i-1}, \sommet{}_i))$$
+    }
+
+    \definition[chemin de coût minimal]{%
+        Soit $\grapheval{}$ un graphe valué.
+        Un chemin $\chemin{}$ de $\sommet{}$ à $\sommetb{}$ est un chemin de coût minimal si $\forall \chemin{}'$ chemin de $\sommet{}$ à $\sommetb{}$ on a $\cout{}(\chemin{}') \geq \cout{}(\chemin{})$.
+    }
+}
+
+\frame{
+    \frametitle{Les problèmes qu'on se pose}
+
+    \definition[\pbvv{}]{%
+        Trouver un chemin de coût minimal de $\sommet{}$ à $\sommetb{}$.
+    }
+
+    \definition[\pbvetoile{}]{%
+        Pour tout $\sommetb{}$, trouver un chemin de coût minimal de $\sommet{}$ à $\sommetb{}$.
+    }
+
+    \definition[\pbetoileetoile{}]{%
+        Pour tout $\sommet{}$ et tout $\sommetb{}$, trouver un chemin de coût minimal de $\sommet{}$ à $\sommetb{}$.
+    }   
+}
+
+\frame{
+    \frametitle{Les problèmes qu'on se pose, suite}
+
+    \exercice{%
+        \begin{center}
+            \begin{tikzpicture}
+                \node (v3) at (0,0) {$\sommet{}_3$};
+                \node (v4) at (3,0) {$\sommet{}_4$};
+                \node (v1) at (0,3) {$\sommet{}_1$};
+                \node (v2) at (3,3) {$\sommet{}_2$};
+                \node (v5) at (6,0) {$\sommet{}_5$};
+
+                \shiftdraw{v1}{v2}{0}{0};
+                \shiftdraw{v1}{v4}{0}{0};
+                \shiftdraw{v2}{v4}{0}{0};
+                \shiftdraw{v3}{v1}{0}{0};
+                \shiftdraw{v4}{v3}{0}{0};
+                \shiftdraw{v5}{v4}{0}{0}; 
+
+                \node (info) at (1.5, 3.2) {2};
+                \node (info) at (1.5, -0.2) {2};
+                \node (info) at (-0.2, 1.5) {2};
+                \node (info) at (3.2, 1.5) {2};
+                \node (info) at (4.5, -0.2) {0};
+                \node (info) at (1.7, 1.7) {-1};
+            \end{tikzpicture}
+        \end{center}
+
+        \begin{itemize}
+            \item Résoudre \pbvv{} pour $\sommet{}=\sommet{}_1$ et $\sommetb{}=\sommet{}_3$.
+            \item Résoudre \pbvetoile{} pour $\sommet{}=\sommet{}_1$.
+            \item Résoudre \pbetoileetoile{}.
+        \end{itemize}
+    }
+}
+
+\subsection{Depuis un sommet}
+
+\subsection{Algorithme de Bellman-Ford}
+
+\subsection{Algorithme de Dijkstra}
