@@ -287,3 +287,169 @@
 }
 
 \subsection{Algorithme de Dijkstra}
+
+\frame{
+    \frametitle{Idée générale}
+
+    Permet de réduire la complexité \enavant{lorsque les coûts sont tous positifs ou nuls}.
+
+    \vfill
+
+    L'algorithme de Dijkstra ressemble au parcours en largeur mais en se basant sur le coût des chemins plutôt que sur leur longueur.
+
+    \begin{center}
+        \begin{tikzpicture}
+            \node (v0) at (-1,0) {$\sommet{}_0 ~\bullet$};
+            \draw (1,1) -- (1,-1);
+            \draw (3,1) -- (3,-1);
+            \draw (5,1) -- (5,-1);
+            \node (tmp) at (1,-1.5) {$c=0.3$};
+            \node (tmp) at (3,-1.5) {$c=1.2$};
+            \node (tmp) at (5,-1.5) {$d=3.4$};
+            \draw[-latex] (v0) -- (1,0.5);
+            \draw[-latex] (v0) -- (1,0);
+            \draw[-latex] (v0) -- (1,-0.5);
+            \draw[-latex] (1,0.5) -- (3,0.5);
+            \draw[-latex] (1,0) -- (3,0);
+            \draw[-latex] (1,0) -- (3,-0.5);
+            \draw[-latex] (3,0.5) -- (5,0.75);
+            \draw[-latex] (3,0.5) -- (5,0.25);
+            \draw[-latex] (3,0.5) -- (5,-0.25);
+            \draw[-latex] (3,-0.5) -- (5,-0.75);
+        \end{tikzpicture}
+    \end{center}
+
+    Si tous les coûts sont à 1 ($\forall \arc{}\in \arcs{}, \cout{}(\arc{})$) on retrouve le parcours en largeur.
+}
+
+\frame{
+    \frametitle{Un tas particulier~: la file de priorité}
+
+    Comme le parcours en largeur ou en profondeur, l'algorithme de Dijkstra s'obtient en utilisant un tas particulier pour faire le parcours générique vu dans les cours précédents.
+
+    \vspace{0.5cm}
+
+    \definition[file de priorité]{%
+    Chaque élément du tas possède une priorité associée (un nombre qui permet de classer les éléments).
+        \begin{description}
+            \item[observer] obtenir l'élément de plus petite priorité
+            \item[extraire] retirer l'élément de plus petite priorité
+        \end{description}
+    }
+}
+
+\frame{
+    \frametitle{Algorithme de Dijkstra}
+
+    \begin{center}
+        \begin{minipage}{10cm}
+            \begin{algorithmic}
+                \In{$\grapheval{}$, $\sommet{}_0\in\sommets{}$}
+                \Out{$g$, $pred$}
+                \State $g(\sommet{}_0) = 0$
+                \State $t = init()$ \enavant{// file de priorité où on utilise $g$ comme priorité}
+                \State $t.ajouter(\sommet{}_0)$
+                \State marquer $\sommet{}_0$
+                \While{$!t.estVide()$}
+                    \State $\sommet{} = t.observer()$
+                    \State $t.extraire()$
+                    \ForAll{$\sommetb{}, (\sommet{}, \sommetb{})\in\arcs{}$}
+                        \If{$g(\sommetb{}) > g(\sommet{}) + \cout{}((\sommet{}, \sommetb{}))$}
+                            \State $g(\sommetb{}) = g(\sommet{}) + \cout{}((\sommet{}, \sommetb{}))$
+                            \State $pred(\sommetb{}) = \sommet{}$
+                            \If{$\sommetb{}$ non marqué}
+                                \State marquer $\sommetb{}$
+                                \State $t.ajouter(\sommetb{})$                            
+                            \EndIf
+                        \EndIf
+                    \EndFor
+                \EndWhile
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+}
+
+\frame{
+    \frametitle{Exemple}
+
+    \exercice{%
+        Appliquer l'alogrithme de Dijkstra au graphe suivant pour $\sommet{}_0 = \sommet{}_1$.
+        \begin{center}
+            \begin{tikzpicture}
+                \node (v3) at (0,0) {$\sommet{}_3$};
+                \node (v4) at (3,0) {$\sommet{}_4$};
+                \node (v1) at (0,3) {$\sommet{}_1$};
+                \node (v2) at (3,3) {$\sommet{}_2$};
+                \node (v5) at (6,0) {$\sommet{}_5$};
+
+                \shiftdraw{v1}{v2}{0}{0};
+                \shiftdraw{v1}{v4}{0}{0};
+                \shiftdraw{v2}{v4}{0}{0};
+                \shiftdraw{v3}{v1}{0}{0};
+                \shiftdraw{v4}{v3}{0}{0};
+                \shiftdraw{v5}{v4}{0}{0}; 
+
+                \node (info) at (1.5, 3.2) {2};
+                \node (info) at (1.5, -0.2) {2};
+                \node (info) at (-0.2, 1.5) {2};
+                \node (info) at (3.2, 1.5) {2};
+                \node (info) at (4.5, -0.2) {0};
+                \node (info) at (1.7, 1.7) {-1};
+            \end{tikzpicture}
+        \end{center}
+    }
+}
+
+\frame{
+    \frametitle{Preuve de l'algorithme}
+
+    \proposition{%
+        Pour tout graphe $\graphe{}$, l'algorithme de Dijkstra termine.
+    }
+
+    \exercice{%
+        Prouver cette proposition.
+    }
+
+    \pause
+
+    \proposition{%
+        À la fin de l'exécution de l'algorithme de Dijkstra sur un graphe $\graphe{}$, $pred(\sommet{})$ est défini si et seulement si il y a un chemin de $\sommet{}_0$ à $\sommet{}$ dans $\graphe{}$.
+    }
+
+    \exercice{%
+        Prouver cette proposition.
+    }
+}
+
+\frame{
+    \frametitle{Preuve de l'algorithme, suite}
+
+    \proposition{%
+        À n'importe quel moment de l'exécution de l'algorithem de Dijkstra sur un graphe $\graphe{}$, si $\sommet{}$ est marqué mais n'est pas dans la file, alors $g(\sommet{})$ (et donc $pred(\sommet{})$) ne change plus jamais.
+    }
+
+    \exercice{%
+        Prouver cette proposition.
+        On peut le faire par l'absurde en supposant qu'il existe un sommet $\sommet{}$ qui est marqué, en dehors de la file et pour lequel $g(\sommet{})$ change.
+    }
+}
+
+\frame{
+    \frametitle{Preuve de l'algorithme, fin}
+
+    \proposition{%
+        Lorsqu'on exécute l'algorithme de Dijkstra sur un graphe $\graphe{}$, au moment où un sommet $\sommet{}$ sort de la file $pred(\sommet{})$ permet de retrouver un chemin de coût minimum de $\sommet{}_0$ à $\sommet{}$ et $g(\sommet{})$ est le coût de ce chemin.
+    }
+
+    \remarque{%
+        Le chemin en question est $pred^n(\sommet{})pred^{n-1}(\sommet{})\dots pred(\sommet{})\sommet{}$ avec $pred^n(\sommet{}) = \sommet{}_0$.
+    }
+
+    \pause
+
+    \exercice{%
+        Prouver cette proposition.
+        On pourra commencer par prouver que $pred$ définit bien des chemins avant de montrer que ces chemins sont de coût minimum.
+    }
+}
