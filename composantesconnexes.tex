@@ -1,0 +1,160 @@
+\section{Circuits et composantes connexes}
+
+\subsection{Circuits}
+
+\frame{
+    \frametitle{La notion de circuit}
+
+    \definition[circuit]{%
+        Un chemin $\chemin{} = \sommet{}_1\sommet{}_2\dots{}\sommet{}_n$ d'un graphe $\graphe{}$ est un circuit si $\sommet{}_1 = \sommet{}_n$.
+    }
+
+    \remarque[ordonnancement]{%
+        Notion centrale en ordonnancement~: on peut ordonnancer un ensemble de tâches à condition que le graphe des dépendances entre ces tâches ne contienne pas de circuit.
+    }
+
+    \pause
+
+    \vfill
+
+    Dans cette partie on s'intéresse à déterminer si un graphe contient un circuit ou non.
+}
+
+\frame{
+    \frametitle{Circuits et graphe des chemins}
+
+    \proposition{%
+        Un graphe $\graphe{}$ contient un circuit si et seulement si son graphe des chemins $\graphechem{}$ contient une autoboucle (un arc $(\sommet{}, \sommet{})$).
+    }
+
+    \exercice{%
+        Prouver le proposition.
+    }
+}
+
+\frame{
+    \frametitle{Points d'entrée/de sortie}
+
+    \definition[point d'entrée]{%
+        Un point d'entrée d'un graphe $\graphe{}$ est un sommet $\sommet{}\in\sommets{}$ qui n'a pas de prédecesseurs, c'est-à-dire tel que $\pre{\sommet{}} = \emptyset$.
+    }
+
+    \definition[point de sortie]{%
+        Un point de sortie d'un graphe $\graphe{}$ est un sommet $\sommet{}\in\sommets{}$ qui n'a pas de succésseurs, c'est-à-dire tel que $\suc{\sommet{}} = \emptyset$.
+    }
+
+    \definition[bord]{%
+        Le bord d'un graphe $\graphe{}$ est l'ensemble $\bord{\graphe{}}$ des points d'entrée et des points de sortie de $\graphe{}$.
+    }
+}
+
+\frame{
+    \frametitle{Bord d'un graphe et circuits}
+
+    \proposition{%
+        Un graphe $\graphe{}$ est sans circuits si et seulement si le graphe $\graphe{}\setminus\bord{\graphe{}}$ obtenu en retirant $\bord{\graphe{}}$ de $\graphe{}$ est sans circuits.
+    }
+
+    \exercice{%
+        Prouver cette proposition.
+        On pourra prouver avant cela qu'un circuit ne contient jamais de sommets de $\bord{\graphe{}}$.
+    }
+
+    \pause
+    
+    \proposition{%
+        Soit un graphe $\graphe{}$ non vide et sans points d'entrée.
+        $\graphe{}$ a un circuit.\\
+        Soit un graphe $\graphe{}$ non vide et sans points de sortie.
+        $\graphe{}$ a un circuit.
+    }
+
+    \exercice{%
+        Prouver cette proposition.
+        On pourra prouver dans un premier temps que si $\graphe{}$ a un chemin de longueur $k$ alors il a un chemin de longueur $k+1$.
+    }
+}
+
+\frame{
+    \frametitle{Algorithme glouton pour la détection de circuits}
+
+    Des proposition précédente on déduit l'algorithme glouton suivant pour détecter si un graphe contient un circuit ou pas.
+
+    \begin{center}
+        \begin{minipage}{6cm}
+            \begin{algorithmic}
+                \In{$\graphe$}
+                \State $H = \graphe{}$
+                \While{$H\neq(\emptyset, \emptyset)$}
+                    \State $X = \bord{H}$
+                    \If{$X = \emptyset$}
+                        \State $\graphe{}$ a un circuit
+                    \Else
+                        \State $H = H\setminus X$
+                    \EndIf
+                \EndWhile
+                \State $\graphe{}$ n'a pas de circuit
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+
+    \pause
+
+    \exercice{%
+        Prouver que cet algorithme fonctionne correctement (terminaison, validité du résultat).
+    }
+}
+
+\subsection{DAG}
+
+\frame{
+    \frametitle{Directed Acyclic Graphs}
+
+    \definition[DAG]{%
+        Un graphe qui ne contient pas de circuits est appelé un DAG (Directed Acyclic Graph).
+    }
+
+    \definition[Tri topologique]{%
+        Un tri topologique sur un graphe $\graphedef{}$ est un ordre total $\tritopo{}$ sur les sommets de $\graphe{}$ tel que $\forall (\sommet{}, \sommetb{})\in \arcs{}, \sommet{}\tritopo{}\sommetb{}$.
+    }
+
+    \pause
+
+    \proposition{%
+        Un graphe $\graphe{}$ est un DAG si et seulement si il admet un tri topologique.
+    }
+
+    \exercice{%
+        Prouver la proposition.
+    }
+}
+
+\frame{
+    \frametitle{Alogrithme de Kahn}
+
+    L'algorithme de Kahn permet de construire un tri topologique sur un DAG (on peut aussi l'appliquer à un graphe quelconque et vérifier si c'est un DAG~: c'est le cas si et seulement si il ne reste pas d'arcs dans le graphe à la fin de l'algorithme).
+
+    \begin{center}
+        \begin{minipage}{10cm}
+            \begin{algorithmic}
+                \In{$\graphe$}
+                \Out{$L$ les sommets de $\graphe{}$ dans un ordre topologique}
+                \State $L = \emptyset$ 
+                \State $PE$ ensemble des points d'entrée de $\graphe{}$
+                \While{$PE \neq \emptyset$}
+                    \State enlever $\sommet{}$ de $PE$
+                    \State ajouter $\sommet{}$ à la fin de $L$
+                    \ForAll{$\arc{} = (\sommet{}, \sommetb{})\in \arcs{}$}
+                        \State $\arcs{} = \arcs{}\setminus\{\arc{}\}$
+                        \If{$\dege{\sommetb{}} = 0$}
+                            \State $PE = PE\cup \{\sommetb{}\}$
+                        \EndIf
+                    \EndFor
+                \EndWhile
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+}
+
+\subsection{Composantes connexes}
+\subsection{Algorithme de Tarjan}
