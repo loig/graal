@@ -156,5 +156,252 @@
     \end{center}
 }
 
+\frame{
+    \frametitle{Algorithme de Kahn, suite}
+
+    \proposition{%
+        L'algorithme de Kahn termine.
+    }
+
+    \proposition{%
+        À la fin de l'algorithme $\arcs{}$ est vide si et seulement si $\graphe{}$ est un DAG.
+    }
+
+    \proposition{%
+        Si $\graphe{}$ est un DAG, alors à la fin de l'algorithme les sommets de $L$ sont dans un ordre topologique.
+    }
+
+    \exercice{%
+        Prouver ces propositions.
+    }
+}
+
 \subsection{Composantes connexes}
-\subsection{Algorithme de Tarjan}
+
+\frame{
+    \frametitle{Definitions de base}
+
+    \definition{%
+        Soit $\eqcfc{}$ la relation sur les sommets d'un graphe $\graphe{}$ telle que $\sommet{}\eqcfc{}\sommetb{}$ si et seulement si $\sommet{}\cheminvers{}\sommetb{}$ et $\sommetb{}\cheminvers{}\sommet{}$.
+    }
+
+    \proposition{%
+        $\eqcfc{}$ est une relation d'équivalence.
+    }
+
+    \exercice{%
+        Le prouver.
+    }
+
+    \pause
+
+    \definition[composante fortement connexe (SCC)]{%
+        Une composante fortement connexe d'un graphe $\graphe{}$ est une classe d'équivalence de la relation $\eqcfc{}$.
+    }
+}
+
+\frame{
+    \frametitle{Un exemple}
+
+    \exercice{%
+        Donner les composantes fortement connexes du graphe suivant~:
+
+        \begin{center}
+            \begin{tikzpicture}
+                \node (v3) at (0,0) {$\sommet{}_5$};
+                \node (v4) at (3,0) {$\sommet{}_6$};
+                \node (v1) at (0,3) {$\sommet{}_1$};
+                \node (v2) at (3,3) {$\sommet{}_2$};
+                \node (v5) at (6,0) {$\sommet{}_7$};
+                \node (v6) at (6,3) {$\sommet{}_3$};
+                \node (v7) at (9,3) {$\sommet{}_4$};
+                \node (v8) at (9,0) {$\sommet{}_8$};
+
+                \shiftdraw{v1}{v2}{0}{0};
+                \shiftdraw{v1}{v4}{0}{0};
+                \shiftdraw{v2}{v4}{0}{0};
+                \shiftdraw{v3}{v1}{0}{0};
+                \shiftdraw{v4}{v3}{0}{0};
+                \shiftdraw{v5}{v4}{0}{0}; 
+                \shiftdraw{v5}{v6}{0}{0};  
+                \shiftdraw{v6}{v7}{0}{0};  
+                \shiftdraw{v7}{v8}{0}{0}; 
+                \shiftdraw{v8}{v6}{0}{0}; 
+            \end{tikzpicture}
+        \end{center}
+    }
+
+}
+
+\frame{
+    \frametitle{Propriété des composantes fortement connexes}
+
+    \proposition{%
+        Dans un graphe $\graphe{}$ si deux sommets $\sommet{}$ et $\sommetb{}$ sont dans une même composante fortement connexe, alors tous les chemins de $\sommet{}$ à $\sommetb{}$ passent uniquement par des sommets de cette même composante fortement connexe.
+    }
+
+    \exercice{%
+        Prouver cette proposition.
+    }
+}
+
+\frame{
+    \frametitle{Graphe fortement connexe}
+
+    \definition{%
+        Un graphe est fortement connexe si et seulement si il contient une unique composante fortement connexe.
+    }
+
+    \proposition{%
+        Un graphe $\graphe{}$ est fortement connexe si et seulement si $\graphechem{}$ est le graphe complet.
+    }
+
+    \exercice{%
+        Prouver cette proposition.
+    }
+}
+
+\frame{
+    \frametitle{Quotient}
+
+    \definition{%
+        Pour un graphe $\graphedef{}$ on note $\graphe{}/\eqcfc{}$ le graphe tel que~:
+        \begin{itemize}
+            \item ses sommets sont les classes d'équivalences de $\eqcfc{}$,
+            \item il y a un arc de $\sommets{}_1$ à $\sommets{}_2$ si et seulement si $\exists\sommet{}_1\in\sommets{}_1$, $\exists\sommet{}_2\in\sommets{}_2$ tels que $(\sommet{}_1, \sommet{}_2)\in\arcs{}$.
+        \end{itemize}
+    }
+
+    \proposition{%
+        Pour tout graphe $\graphe{}$, le graphe $\graphe{}/\eqcfc{}$ est un DAG.
+    }
+
+    \exercice{%
+        Prouver la proposition.
+    }
+}
+
+\frame{
+    \frametitle{Algorithme de Kosaraju, schéma}
+
+    \begin{center}
+        Un algorithme qui calcule les SCC d'un graphe $\graphe{}$.
+    \end{center}
+
+    \definition[graphe transposé]{%
+        Le graphe transposé $\transpose{\graphe{}} = (\sommets{},\transpose{\arcs{}})$ d'un graphe $\graphedef{}$ est le graphe tel que~:
+        $$\transpose{\arcs{}} = \{(\sommet{},\sommetb{})~|~(\sommetb{},\sommet{})\in\arcs{}\}.$$
+    }
+
+    \vfill
+
+    \begin{enumerate}
+        \item Effectuer un parcours en profondeur (complet) de $\graphe{}$, à chaque fois qu'un sommet sort de la pile, le stocker dans une autre pile $P$.
+        \item Tant que $P$ n'est pas vide~:
+            \begin{enumerate}
+                \item prendre le premier élément $\sommet{}$ de $P$
+                \item s'il n'est pas marqué, effectuer un parcours de $\transpose{\graphe{}}$ depuis $\sommet{}$
+                \item les sommets non marqués atteints constituent une SCC, les marquer
+            \end{enumerate}
+    \end{enumerate}
+}
+
+\frame{
+    \frametitle{Algorithme de Kosaraju, intuition}
+
+    \proposition{%
+        À l'issue du parcours en profondeur, pour toute SCC $A$ et toute SCC $B$ si $A$ est avant $B$ dans le DAG $\graphe{}/\eqcfc$ alors il existe un sommet $\sommet{}\in A$ tel que pour tout $\sommetb{}\in B$ on a $\sommet{}$ qui est au dessus de $\sommetb{}$ dans la pile $P$.
+    }
+
+    \proposition[corollaire]{%
+        Si on extrait tous les sommets de $P$ dans l'ordre, en ne gardant que le premier représentant rencontré de chaque SCC, les SCC sont rencontrées selon un tri topologique.
+    }
+
+    \proposition{%
+        $\transpose{\graphe{}}/\eqcfc{} = \transpose{\graphe{}/\eqcfc{}}$
+    }
+
+}
+
+\frame{
+    \frametitle{Algorithme de Kosaraju, intuition, suite}
+
+    \begin{itemize}
+        \item Le premier parcours en profondeur permet de retrouver les SCC dans un ordre topologique.
+        \item Dans le graphe transposé cela fait qu'on traite d'abord les SCC qui n'ont pas de successeurs.
+        \item Ainsi, les parcours suivants ne sortent pas de leur SCC car~:
+        \begin{itemize}
+            \item au début elles n'ont pas de successeur dans le graphe transposé quotienté,
+            \item puis elles n'ont pas de successeur non marqué dans le graphe transposé quotienté.
+        \end{itemize}
+        \item On parcourt toutes les SCC car tous les sommets sont dans la pile $P$ à la fin du parcours en profondeur.
+    \end{itemize}
+}
+
+\frame{
+    \frametitle{Algorithme de Kosaraju (1)}
+
+    \begin{center}
+        \begin{minipage}{10cm}
+            \begin{algorithmic}
+                \In{$\graphedef{}$}
+                \Out{$S$ the set of SCC of $\graphe{}$}
+                \State $P = init()$
+                \State $S = \emptyset$
+                \ForAll{$\sommet{}_0\in\sommets{}$}
+                    \If{$!visite(\sommet{}_0)$}
+                        \State $visite(\sommet{}_0) = true$
+                        \State $t = init()$
+                        \While{$!t.estVide()$}
+                            \State $\sommet{} = t.observer()$
+                            \If{$\exists (\sommet{}, \sommetb{})\in \arcs{}$, $!visite(\sommetb{})$}
+                                \State $t.ajouter(\sommetb{})$
+                                \State $visite(\sommetb{}) = true$
+                            \Else
+                                \State $t.extraire()$
+                                \State $P.ajouter(\sommet{})$
+                            \EndIf
+                        \EndWhile
+                    \EndIf
+                \EndFor
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+}
+
+\frame{
+    \frametitle{Algorithme de Kosaraju (2)}
+
+    \begin{center}
+        \begin{minipage}{10cm}
+            \begin{algorithmic}
+                \While{$!P.estVide()$}
+                    \State $\sommet{}_0 = P.observer()$
+                    \State $P.extraire()$
+                    \If{$!marque(\sommet{}_0)$}
+                        \State $marque(\sommet{}_0) = true$
+                        \State $t = init()$
+                        \State $SCC = \{\sommet{}_0\}$
+                        \While{$!t.estVide()$}
+                            \State $\sommet{} = t.observer()$
+                            \If{$\exists (\sommetb{}, \sommet{})\in \arcs{}$, $!marque(\sommetb{})$}
+                                \State $t.ajouter(\sommetb{})$
+                                \State $marque(\sommetb{}) = true$
+                                \State $SCC.ajouter(\sommetb{})$
+                            \Else
+                                \State $t.extraire()$
+                            \EndIf
+                        \EndWhile
+                        \State $S.ajouter(SCC)$
+                    \EndIf
+                \EndWhile
+            \end{algorithmic}
+        \end{minipage}
+    \end{center}
+}
+
+\frame{
+    \frametitle{Plus efficace}
+
+    Il existe un autre algorithme, qui est basé sur un unique parcours en profondeur~: l'algorithme de Tarjan.
+}
